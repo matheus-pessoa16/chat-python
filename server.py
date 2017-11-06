@@ -24,12 +24,12 @@ listaSocketsClientes = {}
 #####################################################################
 
 # funcao que sera executada na thread
-def receivedMessages(socketClient, address): 
-    
+def receivedMessages(socketClient, address):
+
     message = socketClient.recv(1024)
     # primeira mensagem recebida eh o nome
     name = str(message)
-    
+
     global listaNomesClientes
     # usa o IP como chave para achar os nomes dos usuarios do chat
     listaNomesClientes[address] = name
@@ -38,7 +38,7 @@ def receivedMessages(socketClient, address):
     for key in listaNomesClientes:
         print('<' + str(key[0]) + ', ' + str(key[1]) + ', '+ str(listaNomesClientes[key]) + '>')
 
-    
+
     message = listaNomesClientes[address] + ' entrou no chat'
 
     # envia mensagem de que um novo usuario entrou na sala
@@ -55,20 +55,20 @@ def receivedMessages(socketClient, address):
         message = str(message)
         opcao = message.split("'")
         print(opcao)
-        
+
         # index = listaComandosServidor.index(opcao[1])
         print(opcao[1])
         command = opcao[1]
         # ['privado', 'list()', 'nome', 'sair()']
         if command[:len('privado(')] == 'privado(':
             nomeOutroUsuario = opcao[1].split('(')
-            
+
             # aqui eu estou obtendo o nome do usuario para conversar sem os ()
             nomeOutroUsuario = (nomeOutroUsuario[1].split(')'))[0]
             print(nomeOutroUsuario)
 
             print('Conversar com ' + str(nomeOutroUsuario))
-            
+
             # nesse for eu acho qual a chave (IP) do cliente cujo nome foi passado no privado
             for key in listaNomesClientes:
                 if listaNomesClientes[key] == nomeOutroUsuario:
@@ -86,20 +86,30 @@ def receivedMessages(socketClient, address):
 
             #while command.split("'").split(''):
             #    sendMessages(listaNomesClientes[nomeOutroUsuario], address,message):
+        elif command[:len('nome(')] == 'nome(':
+            nome_antigo = listaNomesClientes[address]
+
+            novo_nome = opcao[1].split('(')
+            novo_nome = (novo_nome[1].split(')'))[0]
+
+            listaNomesClientes[address] = novo_nome
+
+            # Envia mensagem para demais clientes sobre a mudança de nomes
+            sendBroadcastMessages(listaSocketsClientes, nome_antigo + ' mudou de nome para ' + novo_nome, address)
 
         elif command[:len('lista()')] == 'lista()':
             enviaListaConectados(address)
-        
+
         elif command == 2:
             print(2)
         elif command[:len('sair()')] == 'sair()':
             sendBroadcastMessages(listaSocketsClientes, name + ' saiu do chat', address)
             del listaNomesClientes[address]
             break
-            
+
 
     socketClient.close()
-    
+
 
 
 # envia mensagens na sala de chat
@@ -121,16 +131,16 @@ def sendMessages(destiny, sender,message):
     else:
         msg = str(listaNomesClientes[sender] + ' says: ' + message)
         listaSocketsClientes[destiny].sendall(bytes(msg, 'utf-8'))
-             
+
 
 
 def enviaListaConectados(address):
-    
+
     listaNomes = []
 
     for key in listaNomesClientes:
         listaNomes.append(listaNomesClientes[key])
-    
+
     sendMessages(address,'server',str(listaNomes))
 
 #####################################################################
@@ -151,18 +161,18 @@ serverSocket.listen(5)
 print('Servidor esperando conexões na porta 10000')
 
 while(True):
-    
+
     (clientSocket, address) = serverSocket.accept()
     #listaSocketsClientes
     #print('O cliente ' + str(address) + ' entrou no chat')
-    
+
 
     listaSocketsClientes[address] = clientSocket
-    
+
     listen_thread = threading.Thread(target=receivedMessages, args = (clientSocket, address))
     listen_thread.start()
-    
-    
+
+
     #listaSocketsClientes[address].sendall(bytes('Teste', 'utf-8'))
 
     '''
@@ -171,4 +181,3 @@ while(True):
             listaSocketsClientes[key].sendall(bytes(str(listaNomesClientes[key]) + ' entrou no chat', 'utf-8') )
             # listaSocketsClientes[key].sendall(bytes(' entrou no chat', 'utf-8') )
     '''
-    

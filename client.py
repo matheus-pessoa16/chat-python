@@ -19,10 +19,10 @@ t.start()
 print("Informe seu nome")
 msg = input()
 tcp.sendall(bytes(msg , 'utf-8'))
-print (msg + '\n')
+print ('\n')
 
 while msg != 'exit()':
-    print(msg)
+    #print(msg)
     tcp.sendall(bytes(msg , "utf-8"))
     msg = input()
 tcp.close()
