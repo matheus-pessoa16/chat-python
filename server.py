@@ -6,14 +6,11 @@ import threading
 #                       DECLARAÇÃO DE VARIÁVEIS                     #
 #####################################################################
 
-# COMANDOS PARA O SERVIDOS
-listaComandosServidor = ['privado', 'lista()', 'nome', 'sair()']
 
-
-# dicionario com os nomes e enderecos IPs dos clientes
+# dicionario com os nomes e enderecos IPs dos clientes - o IP eh a chave
 listaNomesClientes = {}
 
-# contem todos os clientes que se conectam
+# contem todos os clientes que se conectam - o IP eh a chave
 listaSocketsClientes = {}
 
 
@@ -48,6 +45,9 @@ def receivedMessages(socketClient, address):
     sendBroadcastMessages(listaSocketsClientes, message, address)
 
 
+    posicaoEnd = 0
+
+
     while(True):
         message = str(socketClient.recv(1024))
         sendBroadcastMessages(listaSocketsClientes, message, address)
@@ -63,9 +63,27 @@ def receivedMessages(socketClient, address):
         if command[:len('privado(')] == 'privado(':
             nomeOutroUsuario = opcao[1].split('(')
             
+            # aqui eu estou obtendo o nome do usuario para conversar sem os ()
+            nomeOutroUsuario = (nomeOutroUsuario[1].split(')'))[0]
+            print(nomeOutroUsuario)
 
-            print('Conversar com ' + str(nomeOutroUsuario[1]).split(')'))
+            print('Conversar com ' + str(nomeOutroUsuario))
             
+            # nesse for eu acho qual a chave (IP) do cliente cujo nome foi passado no privado
+            for key in listaNomesClientes:
+                if listaNomesClientes[key] == nomeOutroUsuario:
+                    # chave encontrada
+                    posicaoEnd = key
+                    print(posicaoEnd)
+                    break
+
+            msg_aux = 'teste de mensagem privada'
+            # tentativa de mandar uma mensagem privada
+            sendMessages(posicaoEnd, address, msg_aux)
+
+            #message = str(socketClient.recv(1024))
+            #print(message)
+
             #while command.split("'").split(''):
             #    sendMessages(listaNomesClientes[nomeOutroUsuario], address,message):
 
@@ -101,7 +119,7 @@ def sendMessages(destiny, sender,message):
     if sender == 'server':
         listaSocketsClientes[destiny].sendall(bytes(message, 'utf-8'))
     else:
-        msg = listaNomesClientes[sender] + ' says: ' + message
+        msg = str(listaNomesClientes[sender] + ' says: ' + message)
         listaSocketsClientes[destiny].sendall(bytes(msg, 'utf-8'))
              
 
