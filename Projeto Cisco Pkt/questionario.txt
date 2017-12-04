@@ -1,0 +1,43 @@
+1. Qual a principal função do protocolo NAT e como ele é implementado? Por qual razão o mesmo foi criado?
+
+[R]
+
+2. Em uma comunicação entre dois dispositivos (um da subrede A e outro da subrede B), qual é a sequência de protocolos utilizados para efetivamente se inciar uma comunicação? É importante saber a sequência na ordem exata.
+
+[R]
+
+3. Como se dá o funcionamento e a configuração do roteamento estático e dinâmico? Quais as diferenças entre eles? Vantagens e Desvantagens.
+
+[R]
+
+4. Qual é a funcionalidade do protocolo ARP e qual a sua importância para o funcionamento da uma rede?
+
+[R]
+
+5. Os protocolos de roteamento OSPF e RIP possuem diferenças, mas desempenham a mesma função. Considerando o cenário do projeto final, seria possível utilizar o RIPv1? Porquê?
+
+[R]
+
+6. Como é realizado o cálculo de subredes em endereços IPv6?
+
+[R]
+
+7. Tomando como exemplo a subrede A, cujo roteador implementa NAT, como poderia ser feita a configuração para aceitar tráfego originado de fora dessa subrede? Qual o nome dessa técnica?
+
+[R]
+
+8. Um computador na filial está fisicamente conectado à rede, obteve um endereço IPv4, porém não está conseguindo comunicação com outros dispositivos. Quais são as possíveis causas desse problema e como resolver?
+
+[R]
+
+9. De que forma foi implementada e como funciona o túnel IPv6 da rede do provedor?
+
+[R]
+
+10. Uma vez que o túnel IPv6 está implementado, os roteadores da matriz e da filial conseguem trocar informações de roteamento entre si? Como isso ocorre?
+
+[R]
+
+
+
+
